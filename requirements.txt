@@ -1,0 +1,6 @@
+MechanicalSoup
+flask
+tabulate
+waitress
+bs4
+apscheduler

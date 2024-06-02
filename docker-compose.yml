@@ -1,0 +1,11 @@
+services:
+    essoscraper:
+        container_name: essoscraper
+        image: ghcr.io/hadmanysons/essoscraper:main
+        ports:
+            - 9999:9999
+        environment:
+            - SSN=Social Security Number, no dashes
+            - VRN=$Insert Plate Number here, all caps
+            - REFRESH_INTERVAL=3600 #Optional, without it defaults to 1 hour (3600 seconds)
+        restart: unless-stopped
