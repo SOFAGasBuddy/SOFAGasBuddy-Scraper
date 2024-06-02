@@ -1,4 +1,4 @@
-<img src="https://github.com/sofagasbuddy/sofagasbuddy-scraper/raw/main/feature.png"  width="200" height="200">
+<img src="https://github.com/sofagasbuddy/sofagasbuddy-scraper/raw/main/app_logo.png"  width="200" height="200">
 
 # SOFAGasBuddy-Scraper
 Scraper for the AAFES ESSO program, that presents the relevant data as an API or a simple web page
