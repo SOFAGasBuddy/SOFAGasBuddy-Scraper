@@ -3,4 +3,4 @@ flask
 tabulate
 waitress
 bs4
-flask_apscheduler
+Flask-APScheduler

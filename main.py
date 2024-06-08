@@ -3,7 +3,6 @@ from flask import Flask, jsonify
 from tabulate import tabulate
 import waitress
 from flask_apscheduler import APScheduler
-
 from helper_stuff import print_and_log, update_data
 
 app = Flask("ESSOScaper")
@@ -11,7 +10,6 @@ app = Flask("ESSOScaper")
 scheduler = APScheduler()
 scheduler.api_enabled = True
 scheduler.init_app(app)
-scheduler.start()
 
 SSN = os.environ['SSN'].strip("\"").strip("-")
 VRN = os.environ['VRN'].strip("\"")
@@ -24,11 +22,13 @@ except KeyError:
 bal, vehicle_list, health = update_data(SSN, VRN)
 
 
-@scheduler.task('refresh', id='refresh_data', seconds=REFRESH_INTERVAL, misfire_grace_time=900)
+@scheduler.task('interval', id='refresh_data', seconds=REFRESH_INTERVAL, misfire_grace_time=900)
 def refresh_data():
     with scheduler.app.app_context():
         bal, vehicle_list, health = update_data(SSN, VRN)
         print_and_log(f"Refreshed data, health is: {health}")
+
+scheduler.start()
 
 @app.route('/', methods=['GET'])
 def active_only():
