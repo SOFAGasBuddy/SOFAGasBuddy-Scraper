@@ -2,13 +2,20 @@ import os
 from flask import Flask, jsonify
 from tabulate import tabulate
 import waitress
-from apscheduler.schedulers.background import BackgroundScheduler
+from flask_apscheduler import APScheduler
+
 from helper_stuff import print_and_log, update_data
 
 app = Flask("ESSOScaper")
 
+scheduler = APScheduler()
+scheduler.api_enabled = True
+scheduler.init_app(app)
+scheduler.start()
+
 SSN = os.environ['SSN'].strip("\"").strip("-")
 VRN = os.environ['VRN'].strip("\"")
+
 try:
     REFRESH_INTERVAL = int(os.environ['REFRESH_INTERVAL'].strip("\""))
 except KeyError:
@@ -16,18 +23,12 @@ except KeyError:
 
 bal, vehicle_list, health = update_data(SSN, VRN)
 
+
+@scheduler.task('refresh', id='refresh_data', seconds=REFRESH_INTERVAL, misfire_grace_time=900)
 def refresh_data():
-    with app.app_context():
+    with scheduler.app.app_context():
         bal, vehicle_list, health = update_data(SSN, VRN)
         print_and_log(f"Refreshed data, health is: {health}")
-
-def initialize():
-    apsched = BackgroundScheduler()
-    apsched.start()
-    apsched.add_job(refresh_data, 'interval', seconds=REFRESH_INTERVAL)
-
-with app.app_context():
-    initialize()
 
 @app.route('/', methods=['GET'])
 def active_only():
