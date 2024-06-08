@@ -1,7 +1,7 @@
 services:
     essoscraper:
         container_name: sofagasbuddy
-        image: ghcr.io/hadmanysons/sofagasbuddy-scraper:main
+        image: ghcr.io/sofagasbuddy/sofagasbuddy-scraper:main
         ports:
             - 9999:9999
         environment:
